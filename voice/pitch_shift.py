@@ -1,13 +1,4 @@
-import numpy as np
-import librosa 
-from scipy.io import wavfile
-from scipy import signal
-from copy import copy, deepcopy
-import samplerate
-
-import soundfile as sf
-import wave
-import os
+from voice import *
 
 def butter_lowpass(cutoff: float, fs: int, order: int=3) -> tuple:
     """Find lowpass filter coefficients.

@@ -1,5 +1,4 @@
-from pydub import AudioSegment
-import os
+from voice import *
 
 def db_normalize(input_file_name, de_identified_file_name):
     input_song = AudioSegment.from_wav(input_file_name)

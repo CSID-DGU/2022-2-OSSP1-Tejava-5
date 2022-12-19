@@ -3,14 +3,13 @@ import moviepy.editor as mp
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
 import ffmpeg
-# from voice_extractor import voice_extractor
 
 
-#from voice.voice_de_identification import voice_de_identification
+from voice import *
 #from video.video_de_identification import video_de_identification
 
-from video.TDDFA_video import main as TDDFA
-from video._3DDFA_V2.demo_video import main as cat
+#from video.TDDFA_video import main as TDDFA
+# from video._3DDFA_V2.demo_video import main as cat
 
 form_class = uic.loadUiType("ui_deidentification.ui")[0]
 
@@ -40,13 +39,13 @@ class WindowClass(QMainWindow, form_class):
                 #음성 추출 data_voice = ...
                 clip = mp.VideoFileClip(fname[0])
                 clip.audio.write_audiofile("data_voice.mp3")
-#                voice_de_identification("data_voice.mp3", 1.3)
-                TDDFA('-f' + fname[0] + '--onnx')
+                voice_de_identification("data_voice.mp3", 1.3)
+ #               TDDFA('-f' + fname[0] + '--onnx')
 
                 QMessageBox.information(self, "알림", "변환이 완료되었습니다")
         else:
             QMessageBox.warning(self, "Error", "파일을 선택하십시오")
-            cat('-f' + fname[0] + '--onnx')
+ #           cat('-f' + fname[0] + '--onnx')
 
 
 

@@ -1,8 +1,4 @@
-from mp3_to_wav import mp3_to_wav
-from pitch_shift import pitch_shift
-from frequency_stretching import frequency_stretching
-from db_normalize import db_normalize
-from wav_to_mp3 import wav_to_mp3
+from voice import *
 
 def voice_de_identification(extracted_audio, alpha):
     mp3_to_wav(extracted_audio) # change extracted mp3 file to wav

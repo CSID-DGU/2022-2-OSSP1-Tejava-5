@@ -1,6 +1,4 @@
-import librosa 
-import numpy as np
-import soundfile as sf
+from voice import *
 
 def warp_spectrum(S: np.array, factor: float) -> np.array:
     """Stretch frequency of spectrogram.
