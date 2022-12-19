@@ -1,7 +1,7 @@
 import cv2
  
-def main():
-    capture = cv2.VideoCapture('Desktop/test/origin.mp4')
+def main(video):
+    capture = cv2.VideoCapture(video)
     num=0
     if (capture.isOpened()== False): 
         print("Error opening video stream or file")
@@ -11,7 +11,7 @@ def main():
       
         if ret == True:
             cv2.imshow('Frame', frame)
-            path='Desktop/test/origin/origin_' + str(num) + '.jpg'
+            path='./mask/mask_' + str(num) + '.jpg'
             cv2.imwrite(path,frame)
           
             if cv2.waitKey(25) & 0xFF == ord('q'):
@@ -26,4 +26,4 @@ def main():
  
  
 if __name__ == '__main__':
-    main()
+    main('chap.mp4')
