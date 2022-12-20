@@ -1,6 +1,6 @@
-import cv2
-import glob
-import os
+#속도 문제로 사용하지 않음
+from video import *
+
 
 frame_array=[]
 images=sorted(glob.glob('C:/Users/user/Desktop/test/mask/*.jpg'), key=os.path.getctime)

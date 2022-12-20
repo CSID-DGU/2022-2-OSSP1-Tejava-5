@@ -1,53 +1,46 @@
 # coding: utf-8
+from video import *
 
 __author__ = 'cleardusk'
 
 import pyximport
 pyximport.install()
 
-import argparse
-import imageio
-from tqdm import tqdm
-import yaml
 
-from _3DDFA_V2.FaceBoxes import FaceBoxes
-from _3DDFA_V2.TDDFA import TDDFA
-from _3DDFA_V2.utils.render import render
+from .._3DDFA_V2.FaceBoxes import FaceBoxes
+from .._3DDFA_V2.TDDFA import TDDFA
+from .._3DDFA_V2.utils.render import render
 # from utils.render_ctypes import render
-from _3DDFA_V2.utils.functions import cv_draw_landmark, get_suffix
+from .._3DDFA_V2.utils.functions import cv_draw_landmark, get_suffix
 
 
-def main(args):
-    cfg = yaml.load(open(args.config), Loader=yaml.SafeLoader)
+def mask_convert(fname):
+    cfg = yaml.load(open('configs/mb1_120x120.yml'), Loader=yaml.SafeLoader)
 
     # Init FaceBoxes and TDDFA, recommend using onnx flag
-    if args.onnx:
-        import os
-        os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
-        os.environ['OMP_NUM_THREADS'] = '4'
+   # if args.onnx:
+    import os
+    os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+    os.environ['OMP_NUM_THREADS'] = '4'
 
-        from _3DDFA_V2.FaceBoxes.FaceBoxes_ONNX import FaceBoxes_ONNX
-        from _3DDFA_V2.TDDFA_ONNX import TDDFA_ONNX
+    from .._3DDFA_V2.FaceBoxes.FaceBoxes_ONNX import FaceBoxes_ONNX
+    from .._3DDFA_V2.TDDFA_ONNX import TDDFA_ONNX
 
-        face_boxes = FaceBoxes_ONNX()
-        tddfa = TDDFA_ONNX(**cfg)
-    else:
-        gpu_mode = args.mode == 'gpu'
-        tddfa = TDDFA(gpu_mode=gpu_mode, **cfg)
-        face_boxes = FaceBoxes()
+    face_boxes = FaceBoxes_ONNX()
+    tddfa = TDDFA_ONNX(**cfg)
 
     # Given a video path
-    fn = args.video_fp.split('/')[-1]
-    reader = imageio.get_reader(args.video_fp)
+    fn = fname.split('/')[-1]
+    reader = imageio.get_reader(fname)
 
     fps = reader.get_meta_data()['fps']
 
-    suffix = get_suffix(args.video_fp)
-    video_wfp = f'examples/results/videos/{fn.replace(suffix, "")}_{args.opt}.mp4'
+    suffix = get_suffix(fname)
+    video_wfp = f'./masked.mp4'
     writer = imageio.get_writer(video_wfp, fps=fps)
 
     # run
-    dense_flag = args.opt in ('3d',)
+    dense_flag = '3d' #in ('3d',)
     pre_ver = None
     for i, frame in tqdm(enumerate(reader)):
         frame_bgr = frame[..., ::-1]  # RGB->BGR
@@ -76,26 +69,9 @@ def main(args):
 
         pre_ver = ver  # for tracking
 
-        if args.opt == '2d_sparse':
-            res = cv_draw_landmark(frame_bgr, ver)
-        elif args.opt == '3d':
-            res = render(frame_bgr, [ver], tddfa.tri)
-        else:
-            raise ValueError(f'Unknown opt {args.opt}')
-
+        res = render(frame_bgr, [ver], tddfa.tri)
         writer.append_data(res[..., ::-1])  # BGR->RGB
 
     writer.close()
-    print(f'Dump to {video_wfp}')
+#    print(f'Dump to {video_wfp}')
 
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='The demo of video of 3DDFA_V2')
-#    parser.add_argument('-c', '--config', type=str, default='configs/mb1_120x120.yml')
-    parser.add_argument('-f', '--video_fp', type=str)
-#    parser.add_argument('-m', '--mode', default='cpu', type=str, help='gpu or cpu mode')
-#    parser.add_argument('-o', '--opt', type=str, default='2d_sparse', choices=['2d_sparse', '3d'])
-    parser.add_argument('--onnx', action='store_true', default=False)
-
-#    args = parser.parse_args()
-#    main(args)

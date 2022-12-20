@@ -30,8 +30,8 @@
    <widget class="QPushButton" name="fileselectBtn">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>190</y>
+      <x>530</x>
+      <y>200</y>
       <width>121</width>
       <height>51</height>
      </rect>
@@ -62,10 +62,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>200</y>
-      <width>451</width>
-      <height>31</height>
+      <x>110</x>
+      <y>150</y>
+      <width>531</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">

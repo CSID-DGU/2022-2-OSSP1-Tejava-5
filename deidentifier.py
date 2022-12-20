@@ -6,11 +6,11 @@ import ffmpeg
 
 
 from voice import *
-#from video.video_de_identification import video_de_identification
-
 #from video.TDDFA_video import main as TDDFA
-# from video._3DDFA_V2.demo_video import main as cat
 
+from video.deidentified_video_to_image import main as vid2img
+#from FaceSwap.swap_merge import main as merge
+from video.combine import main as combine
 form_class = uic.loadUiType("ui_deidentification.ui")[0]
 
 
@@ -32,6 +32,8 @@ class WindowClass(QMainWindow, form_class):
             global flag
             flag = 1
             self.label.setText(fname[0])    
+            print(fname[0])
+            
 
 
     def btn_convert(self):
@@ -40,13 +42,26 @@ class WindowClass(QMainWindow, form_class):
                 clip = mp.VideoFileClip(fname[0])
                 clip.audio.write_audiofile("data_voice.mp3")
                 voice_de_identification("data_voice.mp3", 1.3)
- #               TDDFA('-f' + fname[0] + '--onnx')
+ #               TDDFA(fname[0])
 
+                vid2img('1차변환.mp4')
+#                merge(self, '0.jpg', "chap.mp4")
+#                merge(self, 'sample/1.jpg', 'swapped.mp4')
+
+
+                import os
+                from os import system, chdir
+                chdir("FaceSwap")
+                os.system("python main_video.py --src_img ../0.jpg --video_path ../원본.mp4 --show --correct_color --save_path ../2차변환.mp4")
+                os.system("python main_video.py --src_img ../sample/1.jpg --video_path ../2차변환.mp4 --show --correct_color --save_path ../de_identified_video.mp4")
+                
+                
+                chdir("..")
+                chdir("video")
+                combine('../de_identified_video.mp4', '../de_identified_audio.mp3')
                 QMessageBox.information(self, "알림", "변환이 완료되었습니다")
         else:
             QMessageBox.warning(self, "Error", "파일을 선택하십시오")
- #           cat('-f' + fname[0] + '--onnx')
-
 
 
 if __name__ == "__main__":

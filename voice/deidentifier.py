@@ -7,6 +7,8 @@ import ffmpeg
 
 from voice_de_identification import voice_de_identification
 # from video_de_identification import video_de_identification
+import pyximport
+pyximport.install()
 
 
 form_class = uic.loadUiType("ui_deidentification.ui")[0]
