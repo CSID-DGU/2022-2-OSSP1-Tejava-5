@@ -5,3 +5,5 @@ Windows용 데모 버전입니다
 
 실행 방법
 $ python deidentification.py 
+
+"원본_10초" 영상을 선택하여 실행합니다.
