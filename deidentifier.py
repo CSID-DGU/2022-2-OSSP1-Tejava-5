@@ -43,8 +43,9 @@ class WindowClass(QMainWindow, form_class):
                 clip.audio.write_audiofile("data_voice.mp3")
                 voice_de_identification("data_voice.mp3", 1.3)
  #               TDDFA(fname[0])
+#Windows에서 3DDFA는 생략하고 미리 처리된 파일을 입력하여 실행되도록 하였음
 
-                vid2img('1차변환.mp4')
+                vid2img('1차변환_10초.mp4')
 #                merge(self, '0.jpg', "chap.mp4")
 #                merge(self, 'sample/1.jpg', 'swapped.mp4')
 
@@ -52,7 +53,7 @@ class WindowClass(QMainWindow, form_class):
                 import os
                 from os import system, chdir
                 chdir("FaceSwap")
-                os.system("python main_video.py --src_img ../0.jpg --video_path ../원본.mp4 --show --correct_color --save_path ../2차변환.mp4")
+                os.system("python main_video.py --src_img ../0.jpg --video_path ../원본_10초.mp4 --show --correct_color --save_path ../2차변환.mp4")
                 os.system("python main_video.py --src_img ../sample/1.jpg --video_path ../2차변환.mp4 --show --correct_color --save_path ../de_identified_video.mp4")
                 
                 
